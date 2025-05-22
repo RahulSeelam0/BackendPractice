@@ -19,7 +19,21 @@ app.use(cookieParser());
 import userRouter from './routes/user.routes.js';
 
 //routes declaration
-app.use("/api/v1/users", userRouter)
+app.use("/api/v1/users", userRouter);
+
+// At the very end of your app setup
+// app.use((err, req, res, next) => {
+//     const statusCode = err.statusCode || 500;
+//     const message = err.message || "Internal Server Error";
+
+//     return res.status(statusCode).json({
+//         success: false,
+//         message,
+//         errors: err.errors || [],
+//         stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+//     });
+// });
+
 
 app.get('/', (req, res) => {
     res.send("Hello, Everything is working fine");
