@@ -60,7 +60,6 @@ const replaceOnCloudinary = async (publicIdToDelete, newLocalFilePath) => {
             resource_type: 'auto',
         });
 
-        console.log("Asset replaced. New URL:", response.secure_url);
 
         // Clean up local file
         fs.unlinkSync(newLocalFilePath);
