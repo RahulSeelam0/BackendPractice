@@ -132,8 +132,8 @@ const loginUser = asyncHandler(async (req, res)=>{
 const logoutUser = asyncHandler(async(req, res) => {
     
     await User.findByIdAndUpdate(req.user._id,{
-        $set : {
-            refreshToken : undefined,
+        $unset : {
+            refreshToken : 1,
             }
         },
         {
@@ -227,6 +227,7 @@ const updateUserAvatar = asyncHandler(async(req, res) => {
     }
     const user = await User.findById(req.user?._id);
     if (!user) {
+        deleteLocalFiles(avatarLocalPath,"");
         throw new ApiError(404, "User not found");
     }
 
@@ -237,6 +238,7 @@ const updateUserAvatar = asyncHandler(async(req, res) => {
 
     const newAvatar = await replaceOnCloudinary(publicId, avatarLocalPath);
     if (!newAvatar?.secure_url) {
+        deleteLocalFiles(avatarLocalPath,"");
         throw new ApiError(500, "Failed to replace avatar");
     }
 
@@ -258,6 +260,7 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
 
     const user = await User.findById(req.user?._id);
     if (!user) {
+        deleteLocalFiles("",coverImageLocalPath);
         throw new ApiError(404, "User not found");
     }
 
@@ -273,6 +276,7 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
         newCoverImage = await uploadOnCloudinary(coverImageLocalPath);
     }
     if (!newCoverImage?.secure_url) {
+        deleteLocalFiles("",coverImageLocalPath);
         throw new ApiError(500, "Failed to replace avatar");
     }
 
